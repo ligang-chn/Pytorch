@@ -78,7 +78,7 @@ batch_size=10
 
 for epoch in range(num_epochs):#每一个迭代周期中，会使用训练数据集中所有样本一次，
     for X,y in data_iter(batch_size,features,labels):
-        l=loss(net(X,w,b),y).sum()#l是有关小批量X和y的损失
+        l=loss(net(X,w,b),y).sum() #l是有关小批量X和y的损失
         l.backward()#小批量的损失对模型参数求梯度
         sgd([w,b],lr,batch_size)#使用小批量随机梯度下降法迭代模型参数
 

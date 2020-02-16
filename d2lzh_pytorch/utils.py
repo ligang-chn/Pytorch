@@ -38,4 +38,4 @@ def data_iter(batch_size,features,labels):
     for i in range(0,num_examples,batch_size):#在0到num_examples中，步长为bathcn——size
         j=torch.LongTensor(indices[i:min(i+batch_size,num_examples)])# 最后一次可能不足一个batch
         yield features.index_select(0,j),labels.index_select(0,j)
-
+        #注意这里使用的是yield，因为当一个循环结束时发送出一个批量，然后返回的到刚刚离开的位置
