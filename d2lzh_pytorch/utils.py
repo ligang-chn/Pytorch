@@ -4,6 +4,7 @@ import sys
 import torchvision
 import torchvision.transforms as transforms
 import torch
+import torch.nn as nn
 from IPython import display
 import matplotlib.pyplot as plt
 
@@ -136,3 +137,36 @@ def train_ch3(net,train_iter,test_iter,loss,num_epochs,batch_size,
         test_acc=evaluate_accuracy(test_iter,net)
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f'
               % (epoch + 1, train_l_sum / n, train_acc_sum / n, test_acc))
+
+
+class FlattenLayer(nn.Module):
+    def __init__(self):
+        super(FlattenLayer,self).__init__()
+
+    def forward(self, x):# x shape: (batch, *, *, ...)
+        return x.view(x.shape[0],-1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
