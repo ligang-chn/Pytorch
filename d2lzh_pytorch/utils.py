@@ -95,7 +95,16 @@ def load_data_fashion_mnist(batch_size, root='./Datasets/FashionMNIST0216'):
 def evaluate_accuracy(data_iter,net):
     acc_sum,n=0.0,0
     for X,y in data_iter:
-        acc_sum+=(net(X).argmax(dim=1)==y).float().sum().item()
+        if isinstance(net,torch.nn.Module):
+            net.eval()#评估模式，这会关闭dropout
+            acc_sum+=(net(X).argmax(dim=1)==y).float().sum().item()
+            net.train()#改回训练模式
+        else: #自定义的模型
+            if('is_training' in net.__code__.co_varnames):
+                #将is_training设置成false
+                acc_sum+=(net(X,is_training=False).argmax(dim=1)==y).float().sum().item()
+            else:
+                acc_sum+=(net(X).argmax(dim=1) == y).float().sum().item()
         n+=y.shape[0]
     return acc_sum/n
 
@@ -320,4 +329,32 @@ def train_and_predict_rnn_pytorch(model, num_hiddens, vocab_size, device,
                 print(' -', predict_rnn_pytorch(
                     prefix, pred_len, model, vocab_size, device, idx_to_char,
                     char_to_idx))
+
+
+def semilogy(x_vals, y_vals, x_label, y_label, x2_vals=None, y2_vals=None,
+             legend=None, figsize=(3.5, 2.5)):
+    set_figsize(figsize)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.semilogy(x_vals, y_vals)
+    if x2_vals and y2_vals:
+        plt.semilogy(x2_vals, y2_vals, linestyle=':')
+        plt.legend(legend)
+
+
+def linreg(X, w, b):
+    return torch.mm(X, w) + b
+
+def squared_loss(y_hat, y):
+    # 注意这里返回的是向量, 另外, pytorch里的MSELoss并没有除以 2
+    return ((y_hat - y.view(y_hat.size())) ** 2) / 2
+
+
+
+
+
+
+
+
+
 
